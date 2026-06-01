@@ -1,0 +1,8 @@
+{
+  "name": "NetSpeed Widget",
+  "description": "A floating real-time network speed tracking widget. Ready for Electron export via GitHub Actions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
