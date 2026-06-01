@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useMotionValue } from 'motion/react';
 import { ArrowUp, ArrowDown, Settings, Lock, Unlock, Droplet, Activity, Maximize, Database } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -44,6 +44,11 @@ function WidgetHost() {
   const [opacity, setOpacity] = useState(1);
   const [widgetScale, setWidgetScale] = useState(1);
   const [showMenu, setShowMenu] = useState(false);
+
+  // Widget Position Setup
+  const initialPos = JSON.parse(localStorage.getItem('widgetPos') || 'null') || { x: window.innerWidth / 2 - 140, y: 100 };
+  const widgetX = useMotionValue(initialPos.x);
+  const widgetY = useMotionValue(initialPos.y);
 
   // Daily Usage State
   const [dailyUsage, setDailyUsage] = useState(() => {
@@ -135,12 +140,15 @@ function WidgetHost() {
       <motion.div
         drag={!locked}
         dragMomentum={false}
+        onDragEnd={() => {
+          localStorage.setItem('widgetPos', JSON.stringify({ x: widgetX.get(), y: widgetY.get() }));
+        }}
         className={cn(
           "absolute p-1 rounded-full",
            locked ? "cursor-default" : "cursor-move"
         )}
-        style={{ opacity }}
-        initial={{ scale: 0.8, opacity: 0, x: window.innerWidth / 2 - 140, y: 100 }}
+        style={{ opacity, x: widgetX, y: widgetY }}
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: widgetScale, opacity: opacity }}
       >
         <div 
